@@ -58,6 +58,34 @@ curl -i 'http://localhost:8000/getNonce?address=0x03e3efAE3a4DD09C997a043Ebf7F24
 curl -X POST http://localhost:8000/login -H "Content-Type: application/json" -d '{"signature": "0x77ce7aaf18f716fc7f22094dcaf9a208d7985e7549270679c468381cb5c97fa03c0d8448a552c969ca2a0e732073b5f39e2dcac0ac1f003b7099a4204e1456451c", "address": "0x03e3efAE3a4DD09C997a043Ebf7F244f33bEcadd"}'
 ```
 
+## Generating a Signature with MetaMask
+
+To test the login endpoint, you can use a browser wallet plugin like MetaMask to generate a signature. Here's a sample code snippet to do this:
+
+```javascript
+ethereum.request({ method: 'eth_requestAccounts' })
+  .then((accounts) => {
+    const account = accounts[0];
+    console.log(account);
+    // Generate the message to be signed
+    const message = 'Please sign : KXWFEJjRhv9LGKjNUq';
+    // Sign the message using the personal_sign method
+    return ethereum.request({ method: 'personal_sign', params: [message, account] });
+  })
+  .then((signature) => {
+    console.log('Signature:', signature);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+### Explanation
+
+- **eth_requestAccounts**: Requests the user's Ethereum account from the wallet.
+- **personal_sign**: Signs a message with the user's private key.
+- **accounts[0]**: The first account in the list of accounts returned by the wallet.
+
 ## Notes
 
 - The nonce is valid for 5 minutes. After expiration, a new nonce must be requested.
